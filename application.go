@@ -1,4 +1,4 @@
-package web
+package mango
 
 import (
 	"net/http"
