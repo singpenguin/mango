@@ -11,14 +11,14 @@ import (
 )
 
 type HTTPRequest struct {
-	Args []string
-	Method string
-	RemoteAddr string
+	Args []string		//route params
+	Method string		//HTTP method
+	RemoteAddr string	//ip
 	Path string
 	Host string
-	Params url.Values
-	Body []byte
-	Files map[string][]*multipart.FileHeader
+	Params url.Values	//GET or POST params
+	Body []byte			//Content-Type=application/octet-stream, Body=http body
+	Files map[string][]*multipart.FileHeader		//Content-Type=multipart/form-data
 
 	W http.ResponseWriter
 	R *http.Request
