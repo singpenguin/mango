@@ -7,6 +7,6 @@ It borrowed from Python [web.py](https://github.com/webpy/webpy) and [tornado](h
 
 It implements nested templates, but does not support multiple levels of nesting.
 
-example: [https://github.com/singpenguin/mango/examples](https://github.com/singpenguin/mango/examples)
+The "StaticPath" parameter is recommended to use in the development of state.
 
 Have fun!
