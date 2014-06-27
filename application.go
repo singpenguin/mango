@@ -16,11 +16,15 @@ type Application struct {
 	Addr string
 	Port int
 	Url map[string]interface{}
+	StaticPath string
 }
 
 func (app *Application) Run() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	http.Handle("/",NewRouter(app.Url))
+	if (app.StaticPath != "") {
+		http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(app.StaticPath))))
+	}
 
 	fmt.Printf("http://%s:%d\n", app.Addr, app.Port)
 

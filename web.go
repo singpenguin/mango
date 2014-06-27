@@ -218,6 +218,10 @@ func (self *HTTPRequest) Write(s string) {
 	self.W.Write([]byte(s))
 }
 
+func (self *HTTPRequest) Render(name string, data interface{}) {
+	Template[name].Execute(self.W, data)
+}
+
 func (self *HTTPRequest) GET() {
 	http.Error(self.W, "Method Not Allowed", 405)
 }
