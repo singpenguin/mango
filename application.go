@@ -17,6 +17,7 @@ type Application struct {
 	Port int
 	Url map[string]interface{}
 	StaticPath string
+	TemplatePath string
 }
 
 func (app *Application) Run() {
@@ -24,6 +25,9 @@ func (app *Application) Run() {
 	http.Handle("/",NewRouter(app.Url))
 	if (app.StaticPath != "") {
 		http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(app.StaticPath))))
+	}
+	if (app.TemplatePath != "") {
+		TemplateLoader(app.TemplatePath)
 	}
 
 	fmt.Printf("http://%s:%d\n", app.Addr, app.Port)
