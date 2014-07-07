@@ -10,3 +10,5 @@ It implements nested templates, but does not support multiple levels of nesting.
 The "StaticPath" parameter is recommended to use in the development of state.
 
 Have fun!
+
+* Email: zhenjinglee@gmail.com
