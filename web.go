@@ -223,21 +223,25 @@ func (self *HTTPRequest) Render(name string, data interface{}) {
 }
 
 func (self *HTTPRequest) GET() {
-	http.Error(self.W, "Method Not Allowed", 405)
+	http.Error(self.W, "Method GET Not Allowed", 405)
 }
 
 func (self *HTTPRequest) POST() {
-	http.Error(self.W, "Method Not Allowed", 405)
+	http.Error(self.W, "Method POST Not Allowed", 405)
 }
 
 func (self *HTTPRequest) HEAD() {
-	http.Error(self.W, "Method Not Allowed", 405)
+	http.Error(self.W, "Method HEAD Not Allowed", 405)
 }
 
 func (self *HTTPRequest) OPTION() {
-	http.Error(self.W, "Method Not Allowed", 405)
+	http.Error(self.W, "Method OPTION Not Allowed", 405)
 }
 
 func (self *HTTPRequest) PUT() {
-	http.Error(self.W, "Method Not Allowed", 405)
+	http.Error(self.W, "Method PUT Not Allowed", 405)
+}
+
+func (self *HTTPRequest) DELETE() {
+	http.Error(self.W, "Method DELETE Not Allowed", 405)
 }
