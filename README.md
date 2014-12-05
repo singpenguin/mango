@@ -14,5 +14,3 @@ Have fun!
 #####Examples:
 
 >[https://github.com/singpenguin/mango-examples](https://github.com/singpenguin/mango-examples)
-
-* Email: zhenjinglee@gmail.com
