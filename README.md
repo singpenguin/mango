@@ -11,7 +11,8 @@ The "StaticPath" parameter is recommended to use in the development of state.
 
 Have fun!
 
-Examples:
-  [https://github.com/singpenguin/mango-examples](https://github.com/singpenguin/mango-examples)
+###Examples:
+
+####[https://github.com/singpenguin/mango-examples](https://github.com/singpenguin/mango-examples)
 
 * Email: zhenjinglee@gmail.com
