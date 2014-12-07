@@ -10,6 +10,7 @@ import (
 
 var (
 	Debug = false
+	CookieSecret = "fLjUfxqXtfNoIldA0A0J"
 )
 
 type Application struct {
