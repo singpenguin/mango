@@ -50,7 +50,7 @@ func reloaderLoop(root string) {
 
 func start(addr string, port int, path string) error {
     if reloaderEnv := os.Getenv("MANGO_RELOADER"); reloaderEnv != "true" {
-        fmt.Printf(" * Knight serving on %s\n", addr)
+        fmt.Printf(" * mango serving on %s\n", addr)
         stdErrC := make(chan string)
         for {
             fmt.Println(" * Restarting with reloader")
