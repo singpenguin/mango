@@ -6,7 +6,8 @@ import (
 	"path"
 	"reflect"
 	"regexp"
-	"utils"
+
+	"github.com/singpenguin/utils"
 )
 
 type Router struct {

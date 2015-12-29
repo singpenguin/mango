@@ -6,7 +6,8 @@ import (
 	"os"
 	"os/signal"
 	"runtime"
-	"utils"
+
+	"github.com/singpenguin/utils"
 )
 
 var (

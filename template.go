@@ -8,7 +8,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-	"utils"
+
+	"github.com/singpenguin/utils"
 )
 
 var Template map[string]*template.Template

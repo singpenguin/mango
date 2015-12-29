@@ -9,7 +9,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"utils"
+
+	"github.com/singpenguin/utils"
 )
 
 type HTTPRequest struct {
