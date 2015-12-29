@@ -72,7 +72,7 @@ var cvs = strings.NewReplacer("\n", " ", "\r", " ", ";", " ")
 
 func (self *HTTPRequest) SetSecureCookie(k, v string, params ...interface{}) {
 	bv := []byte(v)
-	ts := utils.FormatInt(utils.Timestamp())
+	ts := utils.IntToStr(utils.Timestamp())
 	v = utils.Base64Encode(bv)
 	sa := []string{}
 	sa = append(sa, "2|1:0")
@@ -117,7 +117,7 @@ func (self *HTTPRequest) GetSecureCookie(k string) (string, error) {
 	if name_field != k {
 		return "", errors.New("cookie name invalid")
 	}
-	timestamp, _ := utils.ParseInt(timestamp_field)
+	timestamp, _ := utils.StrToInt64(timestamp_field)
 	if timestamp < utils.Timestamp()-2678400 {
 		return "", errors.New("signature has expired")
 	}
@@ -132,7 +132,7 @@ func consumeField(value string) (string, string, error) {
 	var length, rest string
 	utils.Unpack(strings.SplitN(value, ":", 2), &length, &rest)
 
-	n, err := utils.ParseInt(length)
+	n, err := utils.StrToInt64(length)
 	if err != nil {
 		return "", "", errors.New("length field invalid")
 	}
