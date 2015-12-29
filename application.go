@@ -6,8 +6,6 @@ import (
 	"os"
 	"os/signal"
 	"runtime"
-
-	"github.com/singpenguin/mango/utils"
 )
 
 var (

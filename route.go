@@ -6,8 +6,6 @@ import (
 	"path"
 	"reflect"
 	"regexp"
-
-	"github.com/singpenguin/mango/utils"
 )
 
 type Router struct {

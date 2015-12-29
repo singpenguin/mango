@@ -8,8 +8,6 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-
-	"github.com/singpenguin/mango/utils"
 )
 
 var Template map[string]*template.Template

@@ -72,8 +72,8 @@ var cvs = strings.NewReplacer("\n", " ", "\r", " ", ";", " ")
 
 func (self *HTTPRequest) SetSecureCookie(k, v string, params ...interface{}) {
 	bv := []byte(v)
-	ts := FormatInt(Timestamp())
-	v = Base64Encode(bv)
+	ts := utils.FormatInt(utils.Timestamp())
+	v = utils.Base64Encode(bv)
 	sa := []string{}
 	sa = append(sa, "2|1:0")
 	sa = append(sa, fmt.Sprintf("%d:%s", len(ts), ts))
@@ -81,7 +81,7 @@ func (self *HTTPRequest) SetSecureCookie(k, v string, params ...interface{}) {
 	sa = append(sa, fmt.Sprintf("%d:%s", len(v), v))
 	sa = append(sa, "")
 	to_sign := strings.Join(sa, "|")
-	signature := HmacSha256(to_sign, CookieSecret)
+	signature := utils.HmacSha256(to_sign, CookieSecret)
 
 	self.SetCookie(k, to_sign+signature, params...)
 }
@@ -110,18 +110,18 @@ func (self *HTTPRequest) GetSecureCookie(k string) (string, error) {
 	}
 	passed_sig := rest
 	signed_str := value[:len(value)-len(passed_sig)]
-	signature := HmacSha256(signed_str, CookieSecret)
+	signature := utils.HmacSha256(signed_str, CookieSecret)
 	if passed_sig != signature {
 		return "", errors.New("signature invalid")
 	}
 	if name_field != k {
 		return "", errors.New("cookie name invalid")
 	}
-	timestamp, _ := ParseInt(timestamp_field)
+	timestamp, _ := utils.ParseInt(timestamp_field)
 	if timestamp < Timestamp()-2678400 {
 		return "", errors.New("signature has expired")
 	}
-	devalue, err := Base64Decode(value_field)
+	devalue, err := utils.Base64Decode(value_field)
 	if err != nil {
 		return "", errors.New("value cannot be decode")
 	}
