@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/singpenguin/utils"
+	"github.com/singpenguin/mango/utils"
 )
 
 var Template map[string]*template.Template
