@@ -1,4 +1,4 @@
-package mango
+package utils
 
 import (
 	"crypto/hmac"
