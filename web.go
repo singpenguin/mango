@@ -118,7 +118,7 @@ func (self *HTTPRequest) GetSecureCookie(k string) (string, error) {
 		return "", errors.New("cookie name invalid")
 	}
 	timestamp, _ := utils.ParseInt(timestamp_field)
-	if timestamp < Timestamp()-2678400 {
+	if timestamp < utils.Timestamp()-2678400 {
 		return "", errors.New("signature has expired")
 	}
 	devalue, err := utils.Base64Decode(value_field)
@@ -130,9 +130,9 @@ func (self *HTTPRequest) GetSecureCookie(k string) (string, error) {
 
 func consumeField(value string) (string, string, error) {
 	var length, rest string
-	unpack(strings.SplitN(value, ":", 2), &length, &rest)
+	utils.unpack(strings.SplitN(value, ":", 2), &length, &rest)
 
-	n, err := ParseInt(length)
+	n, err := utils.ParseInt(length)
 	if err != nil {
 		return "", "", errors.New("length field invalid")
 	}
