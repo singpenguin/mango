@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"runtime"
 
-	"github.com/singpenguin/utils"
+	"github.com/singpenguin/mango/utils"
 )
 
 var (

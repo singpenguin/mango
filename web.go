@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/singpenguin/utils"
+	"github.com/singpenguin/mango/utils"
 )
 
 type HTTPRequest struct {
