@@ -130,7 +130,7 @@ func (self *HTTPRequest) GetSecureCookie(k string) (string, error) {
 
 func consumeField(value string) (string, string, error) {
 	var length, rest string
-	utils.unpack(strings.SplitN(value, ":", 2), &length, &rest)
+	utils.Unpack(strings.SplitN(value, ":", 2), &length, &rest)
 
 	n, err := utils.ParseInt(length)
 	if err != nil {

@@ -44,7 +44,7 @@ func HmacSha256(message string, key string) string {
 	return fmt.Sprintf("%x", exmac)
 }
 
-func unpack(s []string, vars ...*string) {
+func Unpack(s []string, vars ...*string) {
 	for i, str := range s {
 		*vars[i] = str
 	}
