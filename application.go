@@ -9,21 +9,24 @@ import (
 )
 
 var (
-	Debug        = false
 	CookieSecret = "fLjUfxqXtfNoIldA0A0J"
 )
 
 type Application struct {
-	Addr         string
-	Port         int
-	Url          map[string]interface{}
-	StaticPath   string
-	TemplatePath string
+	Addr            string
+	Port            int
+	Url             map[string]map[string]Handler
+	StaticPath      string
+	TemplatePath    string
+	Debug           bool
+	PreHandler      Handler
+	NotFoundHandler Handler
+	ErrorHandler    Handler
 }
 
 func (app *Application) Run() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
-	http.Handle("/", NewRouter(app.Url))
+	http.Handle("/", NewRouter(app.Url, app.NotFoundHandler, app.ErrorHandler, app.PreHandler))
 	if app.StaticPath != "" {
 		http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(app.StaticPath))))
 	}
@@ -40,7 +43,7 @@ func (app *Application) Run() {
 		root = cwd
 	}
 
-	if Debug {
+	if app.Debug {
 		start(app.Addr, app.Port, root)
 	} else {
 		go func() {

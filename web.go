@@ -30,7 +30,7 @@ type HTTPRequest struct {
 func (self *HTTPRequest) Init(w http.ResponseWriter, r *http.Request, a []string) {
 	self.W = w
 	self.R = r
-	self.Method = r.Method
+	//self.Method = r.Method
 	self.Path = r.URL.Path
 	self.Args = a
 	self.Host = r.Host
@@ -231,7 +231,7 @@ func (self *HTTPRequest) Scheme() string {
 
 func (self *HTTPRequest) Redirect(newloc string) {
 	self.SetHeader("Location", newloc)
-	self.SetStatus(303)
+	self.SetStatus(302)
 }
 
 func (self *HTTPRequest) Query() map[string][]string {
@@ -299,26 +299,4 @@ func (self *HTTPRequest) Render(name string, data interface{}) {
 	Template[name].Execute(self.W, data)
 }
 
-func (self *HTTPRequest) GET() {
-	http.Error(self.W, "Method GET Not Allowed", 405)
-}
-
-func (self *HTTPRequest) POST() {
-	http.Error(self.W, "Method POST Not Allowed", 405)
-}
-
-func (self *HTTPRequest) HEAD() {
-	http.Error(self.W, "Method HEAD Not Allowed", 405)
-}
-
-func (self *HTTPRequest) OPTION() {
-	http.Error(self.W, "Method OPTION Not Allowed", 405)
-}
-
-func (self *HTTPRequest) PUT() {
-	http.Error(self.W, "Method PUT Not Allowed", 405)
-}
-
-func (self *HTTPRequest) DELETE() {
-	http.Error(self.W, "Method DELETE Not Allowed", 405)
-}
+type Handler func(ctx *HTTPRequest)

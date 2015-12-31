@@ -4,21 +4,25 @@ import (
 	"fmt"
 	"net/http"
 	"path"
-	"reflect"
 	"regexp"
 )
 
 type Router struct {
-	// 自定义的404
-	NotFoundHandler http.HandlerFunc
+	// Prepare
+	PreHandler Handler
+	// 404
+	NotFoundHandler Handler
+	// 500
+	ErrorHandler Handler
 	// See Router.StrictSlash(). This defines the flag for new routes.
 	strictSlash bool
-	routers     map[*regexp.Regexp]interface{}
+	//routers     map[*regexp.Regexp]interface{}
+	routers map[*regexp.Regexp]map[string]Handler
 }
 
 // NewRouter returns a new router instance.
-func NewRouter(urls map[string]interface{}) *Router {
-	route := make(map[*regexp.Regexp]interface{})
+func NewRouter(urls map[string]map[string]Handler, n Handler, e Handler, p Handler) *Router {
+	route := make(map[*regexp.Regexp]map[string]Handler)
 
 	for k, _ := range urls {
 		re, err := regexp.Compile("^" + k + "$")
@@ -27,7 +31,7 @@ func NewRouter(urls map[string]interface{}) *Router {
 		}
 		route[re] = urls[k]
 	}
-	return &Router{routers: route}
+	return &Router{routers: route, NotFoundHandler: n, ErrorHandler: e, PreHandler: p}
 }
 
 func (self *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
@@ -42,20 +46,40 @@ func (self *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		m := k.FindStringSubmatch(req.URL.Path)
 
 		if len(m) != 0 {
-			t := reflect.TypeOf(self.routers[k]).Elem()
-			v := reflect.New(t)
-			in := []reflect.Value{reflect.ValueOf(w), reflect.ValueOf(req), reflect.ValueOf(m)}
-			v.MethodByName("Init").Call(in)
-			v.MethodByName(req.Method).Call(nil)
+			ctx := &HTTPRequest{}
+			ctx.Init(w, req, m)
+			if self.PreHandler != nil {
+				self.PreHandler(ctx)
+			}
 
+			defer func() {
+				if err := recover(); err != nil {
+					fmt.Println(err)
+					if self.ErrorHandler == nil {
+						ctx.SetStatus(500)
+						ctx.Write("Internal Server Error")
+					} else {
+						self.ErrorHandler(ctx)
+					}
+				}
+			}()
+
+			if f, ok := self.routers[k][req.Method]; ok {
+				f(ctx)
+			} else {
+				http.Error(w, "Method Not Allowed", 405)
+			}
 			return
 		}
 	}
-	if flag == false {
+	if !flag {
 		if self.NotFoundHandler == nil {
 			http.NotFoundHandler().ServeHTTP(w, req)
+		} else {
+			ctx := &HTTPRequest{}
+			ctx.Init(w, req, []string{})
+			self.NotFoundHandler(ctx)
 		}
-		//self.NotFoundHandler(w, req)
 	}
 }
 
