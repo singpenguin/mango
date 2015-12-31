@@ -16,3 +16,5 @@ Feel free to contact me if you have any questions.(zhenjinglee@gmail.com)
 #####Examples:
 
 >[https://github.com/singpenguin/mango-examples](https://github.com/singpenguin/mango-examples)
+
+[中文](https://github.com/singpenguin/mango/README_ZH.MD)
