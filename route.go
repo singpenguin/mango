@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"path"
 	"regexp"
+	"strings"
+	"time"
 )
 
 type Router struct {
@@ -36,6 +38,41 @@ func NewRouter(urls map[string]map[string]Handler, n Handler, e Handler, p Handl
 
 func (self *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	// Clean path to canonical form and redirect.
+	var ctx *HTTPRequest
+	start := time.Now()
+	var st, l int
+	defer func() {
+		if err := recover(); err != nil {
+			st = http.StatusInternalServerError
+			fmt.Println(err)
+			if self.ErrorHandler == nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte("Internal Server Error"))
+			} else {
+				self.ErrorHandler(ctx)
+			}
+		}
+		use := float64(time.Now().UnixNano() - start.UnixNano())
+
+		var ip string
+		if ctx != nil {
+			st = ctx.StatusCode
+			l = ctx.Length
+			ip = ctx.RemoteAddr
+		} else {
+			if st == 0 {
+				st = 200
+			}
+			l = 0
+			ip = strings.Split(req.RemoteAddr, ":")[0]
+		}
+
+		fmt.Printf("%s - - [%d-%02d-%02d %02d:%02d:%02d] \"%s %s \" %d %d %.6f\n",
+			ip, start.Year(), start.Month(), start.Day(),
+			start.Hour(), start.Minute(), start.Second(),
+			req.Method, req.URL.Path, st, l, use/10000000)
+	}()
+
 	if p := cleanPath(req.URL.Path); p != req.URL.Path {
 		w.Header().Set("Location", p)
 		w.WriteHeader(http.StatusMovedPermanently)
@@ -46,23 +83,11 @@ func (self *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		m := k.FindStringSubmatch(req.URL.Path)
 
 		if len(m) != 0 {
-			ctx := &HTTPRequest{}
+			ctx = &HTTPRequest{}
 			ctx.Init(w, req, m)
 			if self.PreHandler != nil {
 				self.PreHandler(ctx)
 			}
-
-			defer func() {
-				if err := recover(); err != nil {
-					fmt.Println(err)
-					if self.ErrorHandler == nil {
-						ctx.SetStatus(500)
-						ctx.Write("Internal Server Error")
-					} else {
-						self.ErrorHandler(ctx)
-					}
-				}
-			}()
 
 			if f, ok := self.routers[k][req.Method]; ok {
 				f(ctx)
@@ -73,6 +98,7 @@ func (self *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 	if !flag {
+		st = http.StatusNotFound
 		if self.NotFoundHandler == nil {
 			http.NotFoundHandler().ServeHTTP(w, req)
 		} else {

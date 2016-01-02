@@ -22,6 +22,8 @@ type HTTPRequest struct {
 	Params     url.Values                         //GET or POST params
 	Body       []byte                             //Content-Type=application/octet-stream, Body=http body
 	Files      map[string][]*multipart.FileHeader //Content-Type=multipart/form-data
+	Length     int                                //response length
+	StatusCode int
 
 	W http.ResponseWriter
 	R *http.Request
@@ -34,6 +36,7 @@ func (self *HTTPRequest) Init(w http.ResponseWriter, r *http.Request, a []string
 	self.Path = r.URL.Path
 	self.Args = a
 	self.Host = r.Host
+	self.StatusCode = http.StatusOK
 
 	ip := r.Header.Get("X-Forwarded-For")
 	if ip == "" {
@@ -56,6 +59,7 @@ func (self *HTTPRequest) SetHeader(k, v string) {
 }
 
 func (self *HTTPRequest) SetStatus(st int) {
+	self.StatusCode = st
 	self.W.WriteHeader(st)
 }
 
@@ -230,8 +234,9 @@ func (self *HTTPRequest) Scheme() string {
 }
 
 func (self *HTTPRequest) Redirect(newloc string) {
+	self.StatusCode = http.StatusFound
 	self.SetHeader("Location", newloc)
-	self.SetStatus(302)
+	self.SetStatus(http.StatusFound)
 }
 
 func (self *HTTPRequest) Query() map[string][]string {
@@ -292,7 +297,8 @@ func (self *HTTPRequest) Data() []byte {
 }
 
 func (self *HTTPRequest) Write(s string) {
-	self.W.Write([]byte(s))
+	n, _ := self.W.Write([]byte(s))
+	self.Length += n
 }
 
 func (self *HTTPRequest) Render(name string, data interface{}) {
