@@ -45,6 +45,9 @@ func TemplateLoader(basepath string) map[string]*template.Template {
 		m := re.FindAllString(tmp[k], -1)
 		if len(m) > 0 {
 			for j, _ := range m {
+				if !strings.Contains(m[j], ".html") {
+					continue
+				}
 				s := strings.Trim(m[j], "{")
 				s = strings.Trim(s, "}")
 				s = strings.TrimSpace(s)

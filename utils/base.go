@@ -21,8 +21,14 @@ func StrToInt64(s string) (int64, error) {
 }
 
 //convert int type to string
-func IntToStr(i interface{}) string {
-	return i.(string)
+func IntToStr(i interface{}) (s string) {
+	switch v := i.(type) {
+	case int:
+		s = strconv.FormatInt(int64(v), 10)
+	case int64:
+		s = strconv.FormatInt(int64(v), 10)
+	}
+	return s
 }
 
 func Base64Encode(src []byte) string {
