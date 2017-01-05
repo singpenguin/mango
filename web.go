@@ -306,7 +306,7 @@ func (self *HTTPRequest) Render(name string, data interface{}) {
 	Template[name].Execute(self.W, data)
 }
 
-var jsonContentType = []string{"application/json; charset=utf-8"}
+var jsonContentType = "application/json; charset=utf-8"
 
 func (self *HTTPRequest) Send(data interface{}) error {
 	self.SetHeader("Content-Type", jsonContentType)
