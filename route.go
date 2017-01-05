@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+type H map[string]interface{}
+
 type Router struct {
 	// Prepare
 	PreHandler Handler
