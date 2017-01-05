@@ -46,10 +46,15 @@ func (self *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	defer func() {
 		if err := recover(); err != nil {
 			st = http.StatusInternalServerError
-			fmt.Println(err)
+			var e = fmt.Sprintf("%s", err)
+			fmt.Println(e)
 			if self.ErrorHandler == nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("Internal Server Error"))
+				if Debug {
+					w.Write([]byte(e))
+				} else {
+					w.Write([]byte("Internal Server Error"))
+				}
 			} else {
 				self.ErrorHandler(ctx)
 			}
@@ -72,7 +77,7 @@ func (self *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		fmt.Printf("%s - - [%d-%02d-%02d %02d:%02d:%02d] \"%s %s \" %d %d %.6f\n",
 			ip, start.Year(), start.Month(), start.Day(),
 			start.Hour(), start.Minute(), start.Second(),
-			req.Method, req.URL.Path, st, l, use/10000000)
+			req.Method, req.URL.Path, st, l, use/1000000)
 	}()
 
 	if p := cleanPath(req.URL.Path); p != req.URL.Path {

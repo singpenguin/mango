@@ -10,6 +10,7 @@ import (
 
 var (
 	CookieSecret = "fLjUfxqXtfNoIldA0A0J"
+	Debug        = false
 )
 
 type Application struct {
@@ -43,6 +44,7 @@ func (app *Application) Run() {
 		root = cwd
 	}
 
+	Debug = app.Debug
 	if app.Debug {
 		start(app.Addr, app.Port, root)
 	} else {
