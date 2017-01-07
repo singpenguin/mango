@@ -297,8 +297,8 @@ func (self *HTTPRequest) Data() []byte {
 	return body
 }
 
-func (self *HTTPRequest) Write(s string) {
-	n, _ := self.W.Write([]byte(s))
+func (self *HTTPRequest) Write(s []byte) {
+	n, _ := self.W.Write(s)
 	self.Length += n
 }
 
