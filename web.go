@@ -268,6 +268,7 @@ func (self *HTTPRequest) parseBodyArguments() {
 			fmt.Println("Error parsing request body:", err)
 		} else {
 			self.Files = self.R.MultipartForm.File
+			pt = self.R.Form
 		}
 	} else if strings.HasPrefix(ct, "application/octet-stream") {
 		self.Body = self.Data()
