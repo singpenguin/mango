@@ -86,7 +86,7 @@ func (self *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	flag := false
-	for k, _ := range self.routers {
+	for k, v := range self.routers {
 		m := k.FindStringSubmatch(req.URL.Path)
 
 		if len(m) != 0 {
@@ -96,7 +96,7 @@ func (self *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 				self.PreHandler(ctx)
 			}
 
-			if f, ok := self.routers[k][req.Method]; ok {
+			if f, ok := v[req.Method]; ok {
 				f(ctx)
 			} else {
 				http.Error(w, "Method Not Allowed", 405)
